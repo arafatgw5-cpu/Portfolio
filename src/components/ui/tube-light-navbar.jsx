@@ -1,77 +1,80 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 export function NavBar({ items = [], className }) {
-  const [activeTab, setActiveTab] = useState(items[0]?.name || "");
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const pathname = usePathname();
 
   if (!items.length) return null;
 
   return (
-    <div
+    <nav
       className={cn(
-        "fixed bottom-0 left-1/2 z-[200] mb-6 h-max -translate-x-1/2 sm:top-0 sm:bottom-auto sm:mb-0 sm:pt-6",
+        "fixed bottom-4 left-1/2 z-[200] w-[94%] max-w-md -translate-x-1/2",
+        "md:top-5 md:bottom-auto md:w-auto md:max-w-none",
         className
       )}
     >
-      <div className="flex items-center gap-3 rounded-full border border-border bg-background/5 px-1 py-1 shadow-lg backdrop-blur-lg">
+      <div
+        className={cn(
+          "flex items-center justify-between gap-1 rounded-full",
+          "border border-white/20 bg-white/70 px-2 py-2 shadow-xl backdrop-blur-xl",
+          "dark:border-white/10 dark:bg-neutral-950/70",
+          "md:justify-center md:gap-2 md:px-3"
+        )}
+      >
         {items.map((item) => {
           const Icon = item.icon;
-          const isActive = activeTab === item.name;
+          const isActive =
+            pathname === item.url ||
+            (item.url !== "/" && pathname.startsWith(item.url));
 
           return (
             <Link
               key={item.name}
               href={item.url}
-              onClick={() => setActiveTab(item.name)}
+              aria-label={item.name}
               className={cn(
-                "relative cursor-pointer rounded-full px-6 py-2 text-sm font-semibold transition-colors",
-                "text-foreground/80 hover:text-primary",
-                isActive && "bg-muted text-primary"
+                "relative flex items-center justify-center gap-2 overflow-hidden rounded-full",
+                "px-4 py-2.5 text-sm font-semibold transition-all duration-300",
+                "text-neutral-600 hover:text-neutral-950",
+                "dark:text-neutral-300 dark:hover:text-white",
+                "md:px-5",
+                isActive && "text-white dark:text-white"
               )}
             >
-              <span className="hidden md:inline">{item.name}</span>
-
-              <span className="md:hidden">
-                <Icon size={18} strokeWidth={2.5} />
-              </span>
-
               {isActive && (
-                <motion.div
-                  layoutId="lamp"
-                  className="absolute inset-0 -z-10 w-full rounded-full bg-primary/5"
-                  initial={false}
+                <motion.span
+                  layoutId="active-nav"
+                  className="absolute inset-0 -z-10 rounded-full bg-neutral-950 dark:bg-white/15"
                   transition={{
                     type: "spring",
-                    stiffness: 300,
-                    damping: 30,
+                    stiffness: 350,
+                    damping: 28,
                   }}
-                >
-                  <div className="absolute -top-2 left-1/2 h-1 w-8 -translate-x-1/2 rounded-t-full bg-primary">
-                    <div className="absolute -top-2 -left-2 h-6 w-12 rounded-full bg-primary/20 blur-md" />
-                    <div className="absolute -top-1 h-6 w-8 rounded-full bg-primary/20 blur-md" />
-                    <div className="absolute left-2 top-0 h-4 w-4 rounded-full bg-primary/20 blur-sm" />
-                  </div>
-                </motion.div>
+                />
               )}
+
+              {Icon && (
+                <Icon
+                  size={18}
+                  strokeWidth={2.4}
+                  className={cn(
+                    "shrink-0",
+                    isActive && "text-white dark:text-white"
+                  )}
+                />
+              )}
+
+              <span className="hidden sm:inline">{item.name}</span>
             </Link>
           );
         })}
       </div>
-    </div>
+    </nav>
   );
 }
