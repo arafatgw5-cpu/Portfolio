@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
@@ -18,29 +19,33 @@ const HeroSection = React.forwardRef(
   (
     {
       className,
+
       logo = {
-        url: "/logo.png",
+        url: "/a.png",
         alt: "Logo",
         text: "Easin Arafat",
       },
+
       slogan = "FRONTEND DEVELOPER",
+
       title = (
         <>
           Hi, I am <br />
           <span className="text-primary">Easin Arafat</span>
         </>
       ),
-      subtitle = "I build modern, responsive and user-friendly web applications using React, Next.js and Tailwind CSS.",
-      callToAction = {
-        text: "VIEW MY WORK",
-        href: "#projects",
-      },
+
+      subtitle =
+        "I build modern, responsive and user-friendly web applications using React, Next.js and Tailwind CSS.",
+
       backgroundImage = "/logo.png",
+
       contactInfo = {
         website: "easinarafat.dev",
-        phone: "+880 1XXXXXXXXX",
+        phone: "+8801876751422",
         address: "Bangladesh",
       },
+
       ...props
     },
     ref
@@ -80,8 +85,10 @@ const HeroSection = React.forwardRef(
         variants={containerVariants}
         {...props}
       >
+        {/* LEFT SIDE */}
         <div className="flex w-full flex-col justify-between p-6 sm:p-8 md:w-1/2 md:p-12 lg:w-3/5 lg:p-16">
           <div>
+            {/* HEADER */}
             <motion.header className="mb-12" variants={itemVariants}>
               {logo && (
                 <div className="flex items-center">
@@ -108,6 +115,7 @@ const HeroSection = React.forwardRef(
               )}
             </motion.header>
 
+            {/* MAIN CONTENT */}
             <motion.main variants={containerVariants}>
               <motion.h1
                 className="text-4xl font-bold leading-tight text-foreground md:text-5xl lg:text-6xl"
@@ -117,7 +125,7 @@ const HeroSection = React.forwardRef(
               </motion.h1>
 
               <motion.div
-                className="my-6 h-1 w-20 bg-primary"
+                className="my-6 h-1 w-20 rounded-full bg-primary"
                 variants={itemVariants}
               />
 
@@ -128,16 +136,37 @@ const HeroSection = React.forwardRef(
                 {subtitle}
               </motion.p>
 
-              <motion.a
-                href={callToAction.href}
-                className="inline-block text-base font-bold tracking-widest text-primary transition-colors hover:text-primary/80"
-                variants={itemVariants}
-              >
-                {callToAction.text}
-              </motion.a>
+              {/* PREMIUM BUTTON */}
+              <motion.div variants={itemVariants}>
+                <Link href="/projects">
+                  <motion.button
+                    className="inline-flex items-center gap-3 rounded-full bg-white/90 px-7 py-3 text-sm font-bold tracking-[0.2em] text-black shadow-2xl backdrop-blur transition-all duration-300 hover:bg-primary hover:text-white"
+                    whileHover={{
+                      scale: 1.06,
+                      y: -4,
+                      boxShadow: "0px 20px 40px rgba(0,0,0,0.25)",
+                    }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <span>VIEW MY PROJECTS</span>
+
+                    <motion.span
+                      animate={{ x: [0, 6, 0] }}
+                      transition={{
+                        duration: 1.2,
+                        repeat: Infinity,
+                      }}
+                      className="text-lg"
+                    >
+                      →
+                    </motion.span>
+                  </motion.button>
+                </Link>
+              </motion.div>
             </motion.main>
           </div>
 
+          {/* FOOTER */}
           <motion.footer className="mt-12 w-full" variants={itemVariants}>
             <div className="grid grid-cols-1 gap-6 text-xs text-muted-foreground sm:grid-cols-3">
               <div className="flex items-center">
@@ -158,24 +187,25 @@ const HeroSection = React.forwardRef(
           </motion.footer>
         </div>
 
-<motion.div
-  className="relative min-h-[400px] w-full overflow-hidden md:min-h-screen md:w-1/2 lg:w-2/5"
-  initial={{
-    clipPath: "polygon(100% 0, 100% 0, 100% 100%, 100% 100%)",
-  }}
-  animate={{
-    clipPath: "polygon(25% 0, 100% 0, 100% 100%, 0% 100%)",
-  }}
-  transition={{ duration: 1.2, ease: "circOut" }}
->
-  <img
-    src={backgroundImage}
-    alt="Hero Image"
-    className="h-full w-full object-cover"
-  />
+        {/* RIGHT SIDE IMAGE */}
+        <motion.div
+          className="relative min-h-[400px] w-full overflow-hidden md:min-h-screen md:w-1/2 lg:w-2/5"
+          initial={{
+            clipPath: "polygon(100% 0, 100% 0, 100% 100%, 100% 100%)",
+          }}
+          animate={{
+            clipPath: "polygon(25% 0, 100% 0, 100% 100%, 0% 100%)",
+          }}
+          transition={{ duration: 1.2, ease: "circOut" }}
+        >
+          <img
+            src={backgroundImage}
+            alt="Hero Image"
+            className="h-full w-full object-cover"
+          />
 
-  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-</motion.div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        </motion.div>
       </motion.section>
     );
   }
